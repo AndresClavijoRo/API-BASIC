@@ -1,0 +1,40 @@
+gcloud beta compute instance-templates create instance-template-webholamundo \
+ --project=misw4204-sw-en-la-nube \
+ --machine-type=e2-small \
+ --network-interface=network=default,network-tier=PREMIUM \
+ --instance-template-region=us-central1 \
+ --no-restart-on-failure \
+ --maintenance-policy=TERMINATE \
+ --provisioning-model=SPOT \
+ --instance-termination-action=STOP \
+ --service-account=511428222899-compute@developer.gserviceaccount.com \
+ --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append \
+ --create-disk=boot=yes,device-name=instance-template-webholamundo,image=projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b,mode=rw,size=10,type=pd-balanced,auto-delete=yes \
+ --no-shielded-secure-boot \
+ --shielded-vtpm \
+ --shielded-integrity-monitoring \
+ --reservation-affinity=any \
+ --tags=network-lb-tag-hola-mundo \
+ --metadata=startup-script='
+#!/bin/bash
+# PASO 0 ACTUALIZAR REPOSITORIOS
+apt-get update
+
+# PASO 1 INSTALA GIT
+sudo apt-get install -y git
+
+# PASO 2 INSTALAR DOCKER
+sudo apt-get install -y docker.io
+
+# PASO 3 INSTALAR DOCKER COMPOSE
+sudo apt-get install -y docker-compose
+
+# PASO 4 CLONAR REPOSITORIO
+git clone https://github.com/AndresClavijoRo/API-BASIC.git
+
+# PASO 5 INGRESAR A LA CARPETA DEL PROYECTO
+cd API-BASIC
+
+# PASO 6 EJECUTAR DOCKER COMPOSE
+sudo docker-compose up -d
+    '

@@ -2,7 +2,7 @@ gcloud auth list
 
 gcloud config set project misw4204-sw-en-la-nube
 
-gcloud compute instances create webholamundo3 \
+gcloud compute instances create webholamundo4 \
     --zone=us-central1-a \
     --machine-type=e2-small \
     --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
@@ -12,7 +12,7 @@ gcloud compute instances create webholamundo3 \
     --instance-termination-action=STOP \
     --service-account=511428222899-compute@developer.gserviceaccount.com \
     --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append \
-    --create-disk=boot=yes,device-name=webholamundo3,image=projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b,mode=rw,size=10,type=projects/misw4204-sw-en-la-nube/zones/us-central1-a/diskTypes/pd-balanced \
+    --create-disk=boot=yes,device-name=webholamundo4,image=projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b,mode=rw,size=10,type=projects/misw4204-sw-en-la-nube/zones/us-central1-a/diskTypes/pd-balanced,auto-delete=no \
     --no-shielded-secure-boot \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
@@ -45,3 +45,11 @@ sudo docker-compose up -d
 
 gcloud compute firewall-rules create www-firewall-hola-mundo \
     --target-tags network-lb-tag-hola-mundo --allow tcp:5000
+
+
+gcloud compute images create image-hola-mundo \
+    --project=misw4204-sw-en-la-nube \
+    --source-disk=webholamundo4 \
+    --source-disk-zone=us-central1-a \
+    --storage-location=us
+

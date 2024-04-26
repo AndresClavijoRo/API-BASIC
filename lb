@@ -1,0 +1,114 @@
+POST https://compute.googleapis.com/compute/beta/projects/misw4204-sw-en-la-nube/regions/us-central1/backendServices
+{
+  "backends": [
+    {
+      "balancingMode": "UTILIZATION",
+      "capacityScaler": 1,
+      "group": "projects/misw4204-sw-en-la-nube/regions/us-central1/instanceGroups/hola-mundo-group",
+      "maxUtilization": 0.8
+    }
+  ],
+  "connectionDraining": {
+    "drainingTimeoutSec": 300
+  },
+  "description": "",
+  "enableCDN": false,
+  "healthChecks": [
+    "projects/misw4204-sw-en-la-nube/regions/us-central1/healthChecks/hola-mundo-health-check"
+  ],
+  "loadBalancingScheme": "EXTERNAL_MANAGED",
+  "localityLbPolicy": "ROUND_ROBIN",
+  "name": "hola-mundo-backend",
+  "portName": "http",
+  "protocol": "HTTP",
+  "region": "projects/misw4204-sw-en-la-nube/regions/us-central1",
+  "securityPolicy": "projects/misw4204-sw-en-la-nube/regions/us-central1/securityPolicies/default-security-policy-for-backend-service-hola-mundo-backend",
+  "sessionAffinity": "NONE",
+  "timeoutSec": 30
+}
+
+POST https://compute.googleapis.com/compute/beta/projects/misw4204-sw-en-la-nube/regions/us-central1/backendServices/hola-mundo-backend/setSecurityPolicy
+{
+  "securityPolicy": "projects/misw4204-sw-en-la-nube/regions/us-central1/securityPolicies/default-security-policy-for-backend-service-hola-mundo-backend"
+}
+
+POST https://compute.googleapis.com/compute/v1/projects/misw4204-sw-en-la-nube/regions/us-central1/urlMaps
+{
+  "defaultService": "projects/misw4204-sw-en-la-nube/regions/us-central1/backendServices/hola-mundo-backend",
+  "name": "holamundo-lb",
+  "region": "projects/misw4204-sw-en-la-nube/regions/us-central1"
+}
+
+POST https://compute.googleapis.com/compute/v1/projects/misw4204-sw-en-la-nube/regions/us-central1/targetHttpProxies
+{
+  "name": "holamundo-lb-target-proxy",
+  "region": "projects/misw4204-sw-en-la-nube/regions/us-central1",
+  "urlMap": "projects/misw4204-sw-en-la-nube/regions/us-central1/urlMaps/holamundo-lb"
+}
+
+POST https://compute.googleapis.com/compute/v1/projects/misw4204-sw-en-la-nube/regions/us-central1/forwardingRules
+{
+  "IPProtocol": "TCP",
+  "loadBalancingScheme": "EXTERNAL_MANAGED",
+  "name": "holamundo-lb-forwarding-rule",
+  "network": "projects/misw4204-sw-en-la-nube/global/networks/default",
+  "networkTier": "STANDARD",
+  "portRange": "80",
+  "region": "projects/misw4204-sw-en-la-nube/regions/us-central1",
+  "target": "projects/misw4204-sw-en-la-nube/regions/us-central1/targetHttpProxies/holamundo-lb-target-proxy"
+}
+
+POST https://compute.googleapis.com/compute/beta/projects/misw4204-sw-en-la-nube/regions/us-central1/securityPolicies
+{
+  "description": "Default security policy for: hola-mundo-backend",
+  "name": "default-security-policy-for-backend-service-hola-mundo-backend",
+  "region": "us-central1",
+  "rules": [
+    {
+      "action": "allow",
+      "match": {
+        "config": {
+          "srcIpRanges": [
+            "*"
+          ]
+        },
+        "versionedExpr": "SRC_IPS_V1"
+      },
+      "priority": 2147483647
+    },
+    {
+      "action": "throttle",
+      "description": "Default rate limiting rule",
+      "match": {
+        "config": {
+          "srcIpRanges": [
+            "*"
+          ]
+        },
+        "versionedExpr": "SRC_IPS_V1"
+      },
+      "priority": 2147483646,
+      "rateLimitOptions": {
+        "conformAction": "allow",
+        "enforceOnKey": "IP",
+        "exceedAction": "deny(403)",
+        "rateLimitThreshold": {
+          "count": 500,
+          "intervalSec": 60
+        }
+      }
+    }
+  ],
+  "selfLink": "projects/misw4204-sw-en-la-nube/regions/us-central1/securityPolicies/default-security-policy-for-backend-service-hola-mundo-backend",
+  "type": ""
+}
+
+POST https://compute.googleapis.com/compute/beta/projects/misw4204-sw-en-la-nube/regions/us-central1/instanceGroups/hola-mundo-group/setNamedPorts
+{
+  "namedPorts": [
+    {
+      "name": "http",
+      "port": 5000
+    }
+  ]
+}

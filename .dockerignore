@@ -1,0 +1,20 @@
+# Ignorar el directorio del entorno virtual
+venv
+
+# Ignorar los archivos de caché de Python
+__pycache__
+
+# Ignorar los archivos de compilación de Python
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar los archivos de registro
+*.log
+
+# Ignorar los archivos de Docker
+Dockerfile
+docker-compose.yml

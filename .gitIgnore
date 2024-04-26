@@ -1,0 +1,9 @@
+# Ignorar el directorio del entorno virtual
+venv/
+
+# Ignorar los archivos de caché de Python
+__pycache__/
+*.py[cod]
+
+# Ignorar los archivos de registro
+*.log

@@ -1,0 +1,21 @@
+#!/bin/bash
+# PASO 0 ACTUALIZAR REPOSITORIOS
+apt-get update
+
+# PASO 1 INSTALA GIT
+sudo apt-get install -y git
+
+# PASO 2 INSTALAR DOCKER
+sudo apt-get install -y docker.io
+
+# PASO 3 INSTALAR DOCKER COMPOSE
+sudo apt-get install -y docker-compose
+
+# PASO 4 CLONAR REPOSITORIO
+git clone https://github.com/AndresClavijoRo/API-BASIC.git
+
+# PASO 5 INGRESAR A LA CARPETA DEL PROYECTO
+cd API-BASIC
+
+# PASO 6 EJECUTAR DOCKER COMPOSE
+sudo docker-compose up -d
